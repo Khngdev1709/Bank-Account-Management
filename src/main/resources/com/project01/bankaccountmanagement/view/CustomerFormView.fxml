@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="540.0" prefWidth="680.0"
+            style="-fx-background-color: #ecf0f1;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.project01.bankaccountmanagement.presentation.CustomerFormController">
+    <children>
+
+        <VBox spacing="12.0"
+              style="-fx-background-color: white;"
+              AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <padding><Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/></padding>
+            <children>
+
+                <!-- Dòng 1: Tiêu đề + Nút Thêm mới -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label text="QUẢN LÝ KHÁCH HÀNG" textFill="#2c3e50">
+                            <font><Font name="System Bold" size="18.0"/></font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblTotalRecords" text="" textFill="#7f8c8d">
+                            <font><Font size="13.0"/></font>
+                        </Label>
+                        <Button fx:id="btnAdd" onAction="#handleAdd"
+                                prefHeight="36.0" prefWidth="110.0"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;"
+                                text="Thêm mới">
+                            <font><Font name="System Bold" size="13.0"/></font>
+                        </Button>
+                    </children>
+                </HBox>
+
+                <!-- Dòng 2: Thanh tìm kiếm -->
+                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                    <children>
+                        <TextField fx:id="txtSearch"
+                                   prefHeight="35.0"
+                                   promptText="Tìm theo tên, số CCCD hoặc số điện thoại..."
+                                   style="-fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"
+                                   HBox.hgrow="ALWAYS">
+                            <font><Font size="13.0"/></font>
+                        </TextField>
+                        <Button onAction="#handleSearch"
+                                prefHeight="35.0" prefWidth="90.0"
+                                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;"
+                                text="Tìm kiếm">
+                            <font><Font size="13.0"/></font>
+                        </Button>
+                        <Button onAction="#handleRefresh"
+                                prefHeight="35.0" prefWidth="80.0"
+                                style="-fx-background-color: white; -fx-text-fill: #2c3e50; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;"
+                                text="Làm mới">
+                            <font><Font size="13.0"/></font>
+                        </Button>
+                    </children>
+                </HBox>
+
+                <Separator/>
+
+                <!-- Dòng 3: Bảng + Form -->
+                <HBox spacing="0.0" VBox.vgrow="ALWAYS">
+                    <children>
+
+                        <!-- BẢNG DANH SÁCH -->
+                        <TableView fx:id="tblCustomers"
+                                   HBox.hgrow="ALWAYS"
+                                   style="-fx-border-color: #bdc3c7;">
+                            <columns>
+                                <TableColumn fx:id="colId"           prefWidth="55.0"  text="Mã KH"/>
+                                <TableColumn fx:id="colFullName"     prefWidth="140.0" text="Họ và Tên"/>
+                                <TableColumn fx:id="colIdentityCard" prefWidth="115.0" text="Số CCCD/CMND"/>
+                                <TableColumn fx:id="colPhone"        prefWidth="105.0" text="Số Điện Thoại"/>
+                                <TableColumn fx:id="colEmail"        prefWidth="145.0" text="Email"/>
+                                <TableColumn fx:id="colAddress"      prefWidth="110.0" text="Địa Chỉ"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+
+                        <!-- FORM NHẬP LIỆU -->
+                        <VBox prefWidth="245.0" spacing="7.0"
+                              style="-fx-border-color: #dcdde1; -fx-border-width: 0 0 0 1; -fx-background-color: white;">
+                            <padding><Insets top="6.0" right="14.0" bottom="10.0" left="14.0"/></padding>
+                            <children>
+
+                                <!-- Tiêu đề form -->
+                                <Label fx:id="lblFormTitle" text="Thêm Khách Hàng" textFill="#2c3e50">
+                                    <font><Font name="System Bold" size="14.0"/></font>
+                                    <VBox.margin><Insets top="2.0" bottom="2.0"/></VBox.margin>
+                                </Label>
+
+                                <!-- Mã KH: Luôn hiển thị, tự động sinh khi thêm mới, cố định vị trí layout -->
+                                <VBox fx:id="rowCustomerId" spacing="3.0">
+                                    <children>
+                                        <Label text="Mã Khách Hàng" textFill="#7f8c8d">
+                                            <font><Font size="12.0"/></font>
+                                        </Label>
+                                        <TextField fx:id="txtCustomerId" editable="false" prefHeight="32.0"
+                                                   promptText="(Tự động tạo)"
+                                                   style="-fx-background-color: #f1f2f6; -fx-border-color: #dcdde1; -fx-border-radius: 4; -fx-background-radius: 4; -fx-text-fill: #7f8c8d;">
+                                            <font><Font size="12.0"/></font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <!-- Họ và Tên -->
+                                <VBox spacing="3.0">
+                                    <children>
+                                        <Label text="Họ và Tên (*)" textFill="#7f8c8d">
+                                            <font><Font size="12.0"/></font>
+                                        </Label>
+                                        <TextField fx:id="txtFullName" prefHeight="32.0"
+                                                   promptText="Nhập họ và tên..."
+                                                   style="-fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;">
+                                            <font><Font size="12.0"/></font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <!-- Số CCCD -->
+                                <VBox spacing="3.0">
+                                    <children>
+                                        <Label text="Số CCCD / CMND (*)" textFill="#7f8c8d">
+                                            <font><Font size="12.0"/></font>
+                                        </Label>
+                                        <TextField fx:id="txtIdentityCard" prefHeight="32.0"
+                                                   promptText="12 số (hoặc CMND 9 số)"
+                                                   style="-fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;">
+                                            <font><Font size="12.0"/></font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <!-- Số Điện Thoại -->
+                                <VBox spacing="3.0">
+                                    <children>
+                                        <Label text="Số Điện Thoại (*)" textFill="#7f8c8d">
+                                            <font><Font size="12.0"/></font>
+                                        </Label>
+                                        <TextField fx:id="txtPhone" prefHeight="32.0"
+                                                   promptText="0xxxxxxxxx"
+                                                   style="-fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;">
+                                            <font><Font size="12.0"/></font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <!-- Email -->
+                                <VBox spacing="3.0">
+                                    <children>
+                                        <Label text="Email" textFill="#7f8c8d">
+                                            <font><Font size="12.0"/></font>
+                                        </Label>
+                                        <TextField fx:id="txtEmail" prefHeight="32.0"
+                                                   promptText="example@gmail.com"
+                                                   style="-fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;">
+                                            <font><Font size="12.0"/></font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <!-- Địa Chỉ -->
+                                <VBox spacing="3.0">
+                                    <children>
+                                        <Label text="Địa Chỉ" textFill="#7f8c8d">
+                                            <font><Font size="12.0"/></font>
+                                        </Label>
+                                        <TextField fx:id="txtAddress" prefHeight="32.0"
+                                                   promptText="Địa chỉ cư trú..."
+                                                   style="-fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4;">
+                                            <font><Font size="12.0"/></font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <Region VBox.vgrow="ALWAYS"/>
+
+                                <!--
+                                  KHU VỰC NÚT BẤM CỐ ĐỊNH:
+                                  - btnPrimary: luôn hiển thị, full-width, đổi text "Lưu" (thêm mới) ↔ "Cập nhật" (click dòng)
+                                  - btnDelete : nằm ngay dưới btnPrimary, managed=true (giữ vị trí), chỉ toggle visible ở chế độ edit
+                                -->
+                                <VBox spacing="6.0">
+                                    <children>
+                                        <!-- Nút chính: "Lưu" hoặc "Cập nhật" -->
+                                        <Button fx:id="btnPrimary" onAction="#handlePrimary"
+                                                maxWidth="1.7976931348623157E308" prefHeight="35.0"
+                                                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand;"
+                                                text="Lưu">
+                                            <font><Font name="System Bold" size="13.0"/></font>
+                                        </Button>
+                                        <!-- Nút Xóa: nằm dưới, managed=true để giữ nguyên vị trí cho nút phía trên -->
+                                        <Button fx:id="btnDelete" onAction="#handleDelete"
+                                                maxWidth="1.7976931348623157E308" prefHeight="35.0"
+                                                managed="true" visible="false"
+                                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand;"
+                                                text="Xóa">
+                                            <font><Font name="System Bold" size="13.0"/></font>
+                                        </Button>
+                                    </children>
+                                </VBox>
+
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+
+    </children>
+</AnchorPane>
