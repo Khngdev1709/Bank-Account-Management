@@ -7,6 +7,8 @@ module com.project01.bankaccountmanagement {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.project01.bankaccountmanagement to javafx.fxml;
-    exports com.project01.bankaccountmanagement;
+    requires java.sql;
+
+    opens com.project01.bankaccountmanagement.presentation to javafx.fxml;
+    exports com.project01.bankaccountmanagement.presentation;
 }
