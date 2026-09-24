@@ -19,6 +19,14 @@ public class Customer {
         this.address = address;
     }
 
+    public Customer(String fullName, String identityCard, String phone, String email, String address) {
+        this.fullName = fullName;
+        this.identityCard = identityCard;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+    }
+
     public int getCustomerID() { return customerID; }
     public void setCustomerID(int customerID) { this.customerID = customerID; }
 
