@@ -3,8 +3,12 @@ package com.project01.bankaccountmanagement.presentation;
 import com.project01.bankaccountmanagement.model.AdminUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+
+import java.io.IOException;
 
 public class AdminController {
 
@@ -61,5 +65,19 @@ public class AdminController {
     @FXML
     void showAccountManagement(ActionEvent event) {
         // Tải giao diện quản lý tài khoản vào giữa mainPane
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/com/project01/bankaccountmanagement/view/AccountFormView.fxml"
+                    )
+            );
+
+            Parent accountView = loader.load();
+
+            mainPane.setCenter(accountView);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
