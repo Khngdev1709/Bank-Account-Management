@@ -1,8 +1,10 @@
 package com.project01.bankaccountmanagement.presentation;
 
 import com.project01.bankaccountmanagement.bll.BankAccountBLL;
+import com.project01.bankaccountmanagement.bll.CustomerBLL;
 import com.project01.bankaccountmanagement.model.BankAccount;
 
+import com.project01.bankaccountmanagement.model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,7 +26,7 @@ public class AccountFormController {
     // =========================
 
     @FXML
-    private ComboBox<Integer> cbCustomer;
+    private ComboBox<Customer> cbCustomer;
 
     @FXML
     private TextField txtAccountNumber;
@@ -65,6 +67,7 @@ public class AccountFormController {
     // BLL
     // =========================
 
+    private final CustomerBLL customerBLL = new CustomerBLL();
     private BankAccountBLL bankAccountBLL;
 
     // =========================
@@ -163,15 +166,18 @@ public class AccountFormController {
     // =========================
 
     private void loadCustomers() {
+        try {
+            List<Customer> customers = customerBLL.getAllCustomers();
 
-        /*
-         * Tạm thời chưa lấy Customer từ CustomerBLL.
-         *
-         * Vì module Customer của thành viên khác đang phụ trách.
-         *
-         * Khi CustomerBLL hoàn thiện, phần này sẽ được
-         * kết nối với CustomerBLL để lấy CustomerID thực tế.
-         */
+            cbCustomer.getItems().clear();
+
+            for (Customer customer : customers) {
+                cbCustomer.getItems().add(customer);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // =========================
@@ -184,9 +190,9 @@ public class AccountFormController {
         try {
 
             // 1. Kiểm tra Customer
-            Integer customerID = cbCustomer.getValue();
+            Customer selectedCustomer = cbCustomer.getValue();
 
-            if (customerID == null) {
+            if (selectedCustomer == null) {
 
                 showWarning(
                         "Thiếu thông tin",
@@ -195,6 +201,8 @@ public class AccountFormController {
 
                 return;
             }
+
+            Integer customerID = selectedCustomer.getCustomerID();
 
             // 2. Lấy Account Number
             String accountNumber =
