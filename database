@@ -1,0 +1,43 @@
+CREATE DATABASE BankAccountManagement;
+GO
+
+USE BankAccountManagement;
+GO
+
+-- 1. Bảng Admin (Quản trị viên)
+CREATE TABLE AdminUser (
+    AdminID INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    FullName NVARCHAR(100) NOT NULL,
+    IsActive BIT DEFAULT 1
+);
+GO
+
+-- 2. Bảng Khách hàng (Customer)
+CREATE TABLE Customer (
+    CustomerID INT IDENTITY(1,1) PRIMARY KEY,
+    FullName NVARCHAR(100) NOT NULL,
+    IdentityCard VARCHAR(20) NOT NULL UNIQUE, 
+    Phone VARCHAR(15) NOT NULL,
+    Email VARCHAR(50),
+    Address NVARCHAR(200)
+);
+GO
+
+-- 3. Bảng Tài khoản (BankAccount) 
+CREATE TABLE BankAccount (
+    AccountID INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID INT NOT NULL,
+    AccountNumber VARCHAR(20) NOT NULL UNIQUE,
+    Balance DECIMAL(18, 2) DEFAULT 0.00,
+    Status VARCHAR(20) DEFAULT 'Active', -- Trạng thái: 'Active' hoặc 'Locked'
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    -- Khóa ngoại liên kết với bảng Customer. Tự động xóa tài khoản nếu khách hàng bị xóa.
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID) ON DELETE CASCADE
+);
+GO
+
+INSERT INTO AdminUser (Username, PasswordHash, FullName) 
+VALUES ('admin', 'admin123', N'Quản trị viên Hệ thống');
+GO
