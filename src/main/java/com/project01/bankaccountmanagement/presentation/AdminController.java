@@ -48,7 +48,14 @@ public class AdminController {
 
     @FXML
     void showCustomerManagement(ActionEvent event) {
-        // Tải giao diện quản lý khách hàng vào giữa mainPane
+        try {
+            // Tải giao diện quản lý khách hàng vào giữa mainPane
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/project01/bankaccountmanagement/view/CustomerFormView.fxml"));
+            javafx.scene.Parent customerView = loader.load();
+            mainPane.setCenter(customerView);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

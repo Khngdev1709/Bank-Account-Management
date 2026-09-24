@@ -10,5 +10,9 @@ module com.project01.bankaccountmanagement {
     requires java.sql;
 
     opens com.project01.bankaccountmanagement.presentation to javafx.fxml;
+    opens com.project01.bankaccountmanagement.model to javafx.base;
+
     exports com.project01.bankaccountmanagement.presentation;
+    exports com.project01.bankaccountmanagement.model;
+    exports com.project01.bankaccountmanagement.bll;
 }
