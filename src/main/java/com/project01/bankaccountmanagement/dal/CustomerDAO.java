@@ -178,6 +178,68 @@ public class CustomerDAO {
     }
 
     /**
+     * Kiểm tra xem Số điện thoại đã tồn tại trong cơ sở dữ liệu hay chưa.
+     * Sử dụng để ngăn ngừa trùng lặp khi thêm mới hoặc sửa thông tin.
+     *
+     * @param phone Số điện thoại cần kiểm tra
+     * @param excludeCustomerId Mã khách hàng cần loại trừ (dùng khi cập nhật, truyền <= 0 nếu là thêm mới)
+     * @return true nếu đã tồn tại, false nếu chưa
+     */
+    public boolean isPhoneExists(String phone, int excludeCustomerId) {
+        if (phone == null || phone.trim().isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Customer WHERE Phone = ? AND CustomerID != ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, phone.trim());
+            pstmt.setInt(2, excludeCustomerId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi kiểm tra trùng Số điện thoại: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Kiểm tra xem Email đã tồn tại trong cơ sở dữ liệu hay chưa.
+     * Sử dụng để ngăn ngừa trùng lặp khi thêm mới hoặc sửa thông tin.
+     *
+     * @param email Địa chỉ email cần kiểm tra
+     * @param excludeCustomerId Mã khách hàng cần loại trừ (dùng khi cập nhật, truyền <= 0 nếu là thêm mới)
+     * @return true nếu đã tồn tại, false nếu chưa
+     */
+    public boolean isEmailExists(String email, int excludeCustomerId) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Customer WHERE Email = ? AND CustomerID != ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email.trim());
+            pstmt.setInt(2, excludeCustomerId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi kiểm tra trùng Email: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * Tìm kiếm khách hàng theo từ khóa (khớp với Họ tên, Số CCCD hoặc Số điện thoại).
      *
      * @param keyword Từ khóa tìm kiếm

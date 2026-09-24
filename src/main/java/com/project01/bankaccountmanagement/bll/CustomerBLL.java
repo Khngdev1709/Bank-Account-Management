@@ -136,6 +136,9 @@ public class CustomerBLL {
         if (fullName.length() > 100) {
             throw new Exception("Họ và tên khách hàng không được vượt quá 100 ký tự!");
         }
+        if (fullName.matches(".*\\d.*")) {
+            throw new Exception("Họ và tên khách hàng không được chứa chữ số!");
+        }
         c.setFullName(fullName);
 
         // 2. Validate CCCD / CMND
@@ -150,7 +153,7 @@ public class CustomerBLL {
             throw new Exception("Số CCCD phải có đúng 12 chữ số (hoặc CMND 9 số)!");
         }
 
-        // Kiểm tra chống trùng lặp CCCD trong CSDL
+        // Kiểm tra chống trùng lặp CCCD trong CSDL (loại trừ chính mình nếu đang cập nhật)
         int excludeId = isInsert ? 0 : c.getCustomerID();
         if (customerDAO.isIdentityCardExists(idCard, excludeId)) {
             throw new Exception("Số CCCD/CMND [" + idCard + "] đã tồn tại trên hệ thống! Vui lòng kiểm tra lại.");
@@ -165,9 +168,14 @@ public class CustomerBLL {
         if (!phone.matches("^0\\d{9}$")) {
             throw new Exception("Số điện thoại phải gồm đúng 10 chữ số và bắt đầu bằng số 0 (Ví dụ: 0912345678)!");
         }
+
+        // Kiểm tra chống trùng lặp Số điện thoại trong CSDL
+        if (customerDAO.isPhoneExists(phone, excludeId)) {
+            throw new Exception("Số điện thoại [" + phone + "] đã tồn tại trên hệ thống! Vui lòng kiểm tra lại.");
+        }
         c.setPhone(phone);
 
-        // 4. Validate Email (không bắt buộc nhưng nếu nhập thì phải chuẩn)
+        // 4. Validate Email (không bắt buộc nhưng nếu nhập thì phải chuẩn và không trùng)
         String email = c.getEmail() != null ? c.getEmail().trim() : "";
         if (!email.isEmpty()) {
             if (email.length() > 50) {
@@ -175,6 +183,11 @@ public class CustomerBLL {
             }
             if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
                 throw new Exception("Địa chỉ Email không đúng định dạng (Ví dụ: khachhang@gmail.com)!");
+            }
+
+            // Kiểm tra chống trùng lặp Email trong CSDL (cả khi thêm mới và cập nhật)
+            if (customerDAO.isEmailExists(email, excludeId)) {
+                throw new Exception("Địa chỉ Email [" + email + "] đã tồn tại trên hệ thống! Vui lòng sử dụng email khác.");
             }
             c.setEmail(email);
         } else {
