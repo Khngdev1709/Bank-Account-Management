@@ -1,8 +1,12 @@
+### Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### Caches & Logs ###
 .kotlin
+*.log
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -35,5 +39,11 @@ build/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
+### OS Files (Mac OS & Windows) ###
 .DS_Store
+Thumbs.db
+
+### Security & Database Credentials ###
+.env
+*secret.properties
+credentials.json
