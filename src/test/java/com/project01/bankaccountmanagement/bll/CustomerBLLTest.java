@@ -38,6 +38,14 @@ public class CustomerBLLTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra lỗi khi họ tên chứa chữ số")
+    void testFullNameWithDigitsThrowsException() {
+        Customer c = new Customer("Nguyễn Văn 123", "001202012345", "0912345678", "test@gmail.com", "Hà Nội");
+        Exception exception = assertThrows(Exception.class, () -> customerBLL.addCustomer(c));
+        assertTrue(exception.getMessage().contains("không được chứa chữ số"));
+    }
+
+    @Test
     @DisplayName("Kiểm tra lỗi khi số CCCD/CMND bị bỏ trống")
     void testEmptyIdentityCardThrowsException() {
         Customer c = new Customer("Nguyễn Văn An", "", "0912345678", "test@gmail.com", "Hà Nội");
